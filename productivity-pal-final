@@ -124,7 +124,8 @@ def main(page: ft.Page):
         min_lines=1,
         max_lines=5,
         filled=True,
-        expand=True,        
+        expand=True,   
+        bgcolor=(ft.colors.LIGHT_GREEN_100),#'#c4e3c7',     
         on_submit=send_message_click,
     )
 
@@ -142,6 +143,7 @@ def main(page: ft.Page):
                             ft.TextStyle(
                                 size=30,
                                 weight=ft.FontWeight.BOLD,
+                                #page.horizontal_alignment = ft.CrossAxisAlignment.CENTER,
                                 #alignment=ft.alignment.center,
                                  #= 'center',
                                 foreground=ft.Paint(  
@@ -195,12 +197,50 @@ def main(page: ft.Page):
     #----------------------------------------------------TO-DO APP----------------------------------------------------
     def add_clicked(e):
         page.add(Checkbox(label=new_task.value))
-        new_task.value = ""
+        new_task.value = "" 
         page.update()
 
-    new_task = TextField(hint_text="Write your task here, and select the plus icon to confirm it.")
-    page.add(new_task, FloatingActionButton(icon=icons.ADD, on_click=add_clicked))
+    new_task = TextField(hint_text="Write your task here, and select the plus icon to confirm it.", bgcolor=(ft.colors.LIGHT_GREEN_100))
+    page.add(new_task, FloatingActionButton(icon=icons.ADD, on_click=add_clicked, bgcolor=(ft.colors.GREEN)))
+'''
+    def __init__(self, task_name):
+        self.task_name = task_name
 
+    def build(self):
+        self.display_task = ft.Checkbox(value=False, label=self.task_name)
+        self.edit_name = ft.TextField(expand=1)
+       
+
+        self.edit_view = ft.Row(
+            visible=False,
+            alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
+            vertical_alignment=ft.CrossAxisAlignment.CENTER,
+            controls=[
+                self.edit_name,
+                ft.IconButton(
+                    icon=ft.icons.DONE_OUTLINE_OUTLINED,
+                    icon_color=ft.colors.GREEN,
+                    tooltip="Update To-Do",
+                    on_click=self.save_clicked,
+                ),
+            ],
+        )
+        return ft.Column(controls=[self.display_view, self.edit_view])
+
+    def edit_clicked(self, e):
+        self.edit_name.value = self.display_task.label
+        self.display_view.visible = False
+        self.edit_view.visible = True
+        self.update()
+
+    def save_clicked(self, e):
+        self.display_task.label = self.edit_name.value
+        self.display_view.visible = True
+        self.edit_view.visible = False
+        self.update()
+    
+    
+    '''
 
 
 
