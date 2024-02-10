@@ -1,7 +1,9 @@
+#Imports
 import flet as ft
 from flet import Checkbox, FloatingActionButton, Page, TextField, icons
 import math
 
+#----------------------------------------------------CHAT APP----------------------------------------------------
 class Message():
     def __init__(self, user_name: str, text: str, message_type: str):
         self.user_name = user_name
@@ -52,6 +54,7 @@ def main(page: ft.Page):
     page.horizontal_alignment = "stretch"
     page.title = "Productivity Pal"
     
+    #when the user joins the chat room----------------------------------------------
     def join_chat_click(e):
         if not join_user_name.value:
             join_user_name.error_text = "Name cannot be blank! Sorry."
@@ -65,6 +68,7 @@ def main(page: ft.Page):
                         message_type="login_message"))
             page.update()
 
+    #when the user sends a message----------------------------------------------------
     def send_message_click(e):
         if new_message.value != "":
             page.pubsub.send_all(Message(page.session.get("user_name"), new_message.value, message_type="chat_message"))
@@ -82,7 +86,7 @@ def main(page: ft.Page):
 
     page.pubsub.subscribe(on_message)
 
-    # A dialog asking for a user display name
+    #The "what is your name" part (when you initially open the service) ----------------------------------------------------
     join_user_name = ft.TextField(
         label="Enter your name to join the chat",
         autofocus=True,
@@ -97,7 +101,7 @@ def main(page: ft.Page):
         actions_alignment="end",
     )
 
-    # Chat messages
+    # chat view ----------------------------------------------------
     chat = ft.ListView(
         expand=True,
         spacing=10,
@@ -106,7 +110,7 @@ def main(page: ft.Page):
         
     )
 
-    # A new message entry form
+    #User input for messages ----------------------------------------------------
     new_message = ft.TextField(
         hint_text="Write a message...",
         autofocus=True,
@@ -114,19 +118,17 @@ def main(page: ft.Page):
         min_lines=1,
         max_lines=5,
         filled=True,
-        expand=True,
-        #------------------background
-        
+        expand=True,        
         on_submit=send_message_click,
     )
 
-    # ------------- Header -----------------
+#----------------------------------------------------HEADER----------------------------------------------------
 
     page.add(ft.Icon(name="PUNCH_CLOCK_ROUNDED"))
     label = ft.Text(text_align='center', value='Productivity Pal', size='32', style='bold', color='green', font_family ='Montserrat')
     page.add(label)
 
-    # ------------- Chat Widget ------------
+    #Chat Widget ------------
     page.add(
         ft.Container(
             content=chat,
@@ -147,7 +149,7 @@ def main(page: ft.Page):
         ),
     )
 
-    # ------------------- TO-DO widget--------------
+    #----------------------------------------------------TO-DO APP----------------------------------------------------
     def add_clicked(e):
         page.add(Checkbox(label=new_task.value))
         new_task.value = ""
@@ -157,4 +159,9 @@ def main(page: ft.Page):
     page.add(new_task, FloatingActionButton(icon=icons.ADD, on_click=add_clicked))
 
 
+
+
+
+
+#Run app
 ft.app(port=9999, target=main, assets_dir="icons", view=ft.WEB_BROWSER)
